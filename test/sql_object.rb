@@ -24,4 +24,6 @@ p Cat.all
 
 c = Cat.new(:name => "Gizmo", :owner_id => 1)
 c.save # create
+c.name = "Matt"
 c.save # update
+p Cat.all
