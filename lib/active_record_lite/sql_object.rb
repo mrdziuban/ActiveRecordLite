@@ -6,6 +6,7 @@ require 'active_support/inflector'
 
 class SQLObject < MassObject
   extend Searchable
+  extend Associatable
 
   def self.set_table_name(table_name)
     @table_name = table_name
@@ -31,16 +32,11 @@ class SQLObject < MassObject
       WHERE id = ?
     SQL
 
-    self.parse_all(DBConnection.execute(query, id))
+    self.parse_all(DBConnection.execute(query, id))[0]
   end
 
   def save
-    p self.send(:id)
-    if self.id.nil?
-      create
-    else
-      update
-    end
+    self.id.nil? ? create : update
   end
 
   private
@@ -53,8 +49,6 @@ class SQLObject < MassObject
       INSERT INTO #{self.class.table_name} (#{attributes_string})
       VALUES (#{question_marks_str})
     SQL
-
-    puts "IN CREATE"
 
     DBConnection.execute(query, *attribute_values)
 
@@ -74,8 +68,6 @@ class SQLObject < MassObject
       WHERE id = ?
     SQL
     puts query
-
-    puts "IN UPDATE"
 
     DBConnection.execute(query, *attribute_values, send(:id))
   end
