@@ -10,7 +10,7 @@ class Cat < SQLObject
   set_attrs(:id, :name, :owner_id)
 
   belongs_to :human, :class_name => "Human", :primary_key => :id, :foreign_key => :owner_id
-  # has_one_through :house, :human, :house
+  has_one_through :house, :human, :house
 end
 
 class Human < SQLObject
@@ -18,7 +18,7 @@ class Human < SQLObject
   set_attrs(:id, :fname, :lname, :house_id)
 
   has_many :cats, :foreign_key => :owner_id
-  # belongs_to :house
+  belongs_to :house
 end
 
 class House < SQLObject
@@ -32,6 +32,6 @@ p cat.human
 
 human = Human.find(1)
 p human.cats
-# p human.house
+p human.house
 
-# p cat.house
+p cat.house
