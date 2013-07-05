@@ -21,11 +21,7 @@ class SQLObject < MassObject
       FROM #{@table_name}
     SQL
 
-    row_hashes = DBConnection.execute(query)
-
-    row_hashes.each do |row_hash|
-      self.new(row_hash)
-    end
+    self.parse_all(DBConnection.execute(query))
   end
 
   def self.find(id)
@@ -35,7 +31,7 @@ class SQLObject < MassObject
       WHERE id = ?
     SQL
 
-    DBConnection.execute(query, id)
+    self.parse_all(DBConnection.execute(query, id))
   end
 
   def save

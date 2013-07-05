@@ -17,8 +17,6 @@ module Searchable
       WHERE #{where_string}
     SQL
 
-    puts query
-
-    DBConnection.execute(query, *values)
+    self.parse_all(DBConnection.execute(query, *values))
   end
 end

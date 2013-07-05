@@ -13,6 +13,7 @@ class MassObject
   end
 
   def self.parse_all(results)
+    results.map {|result| self.new(result)}
   end
 
   def initialize(params = {})
@@ -26,11 +27,3 @@ class MassObject
     end
   end
 end
-
-# TEST CODE
-# class MyMassObject < MassObject
-#   set_attrs(:x, :y)
-# end
-
-# obj = MyMassObject.new(:x => :x_val, :y => :y_val)
-# p obj
