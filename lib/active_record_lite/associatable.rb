@@ -16,7 +16,7 @@ end
 
 class BelongsToAssocParams < AssocParams
   def initialize(name, params)
-    @other_class_name = params[:class_name] ||= name.camelize
+    @other_class_name = params[:class_name] ||= name.to_s.camelize
     @primary_key = params[:primary_key] ||= "id"
     @foreign_key = params[:foreign_key] ||= "#{name}_id"
   end
@@ -38,21 +38,20 @@ end
 
 module Associatable
   def assoc_params
+    @assoc_params.nil? ? @assoc_params = {} : @assoc_params
   end
 
   def belongs_to(name, params = {})
-    p name
-    p params
-    x = BelongsToAssocParams.new(name, params)
+    assoc_params[name] = BelongsToAssocParams.new(name, params)
 
     define_method(name) do
       query = <<-SQL
         SELECT *
-        FROM #{x.other_table}
+        FROM #{self.class.assoc_params[name].other_table}
         WHERE id = ?
       SQL
 
-      x.other_class.parse_all(DBConnection.execute(query, self.send(x.foreign_key)))
+      self.class.assoc_params[name].other_class.parse_all(DBConnection.execute(query, self.send(self.class.assoc_params[name].foreign_key)))
     end
   end
 
@@ -70,5 +69,6 @@ module Associatable
   end
 
   def has_one_through(name, assoc1, assoc2)
+
   end
 end
