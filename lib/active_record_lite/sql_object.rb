@@ -74,9 +74,5 @@ class SQLObject < MassObject
 
   def attribute_values
     self.class.attributes.map{|attribute| send(attribute)}
-    # values = []
-    # self.class.attributes.each do |attribute|
-    #   values << send(attribute)
-    # end
   end
 end

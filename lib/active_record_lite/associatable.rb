@@ -68,16 +68,11 @@ module Associatable
     end
   end
 
-  # :house, :human, :house
-  # Cat has a house, because cat has a human and human has a house
   def has_one_through(name, assoc1, assoc2)
     define_method(name) do
       a1 = self.class.assoc_params[assoc1]
       a2 = a1.other_class.assoc_params[assoc2]
 
-      # Select all house info from houses
-      # Cat's cats.owner_id = humans.id
-      # humans.house_id = houses.id
       query = <<-SQL
         SELECT x.*
         FROM #{a2.other_class.table_name} AS x
